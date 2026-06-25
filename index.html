@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교직원 회의 대시보드</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard">
@@ -22,21 +22,28 @@
             </div>
         </div>
 
-        <div class="widget qr-widget">
-            <p class="widget-title">연수 등록부</p>
-            <div class="qr-image-wrapper">
-                <img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Welcome" alt="QR Code">
+        <div class="qr-area">
+            <div class="qr-container" id="qr-box-1" style="display:none;">
+                <p class="qr-label" id="qr-label-1">QR 1</p>
+                <img id="qr-image-1" src="" alt="QR Code 1">
+            </div>
+            <div class="qr-container" id="qr-box-2" style="display:none;">
+                <p class="qr-label" id="qr-label-2">QR 2</p>
+                <img id="qr-image-2" src="" alt="QR Code 2">
+            </div>
+            <div class="qr-container" id="qr-box-3" style="display:none;">
+                <p class="qr-label" id="qr-label-3">QR 3</p>
+                <img id="qr-image-3" src="" alt="QR Code 3">
             </div>
         </div>
 
         <div class="main-card">
             <h1 id="meeting-title">교직원 회의</h1>
-            <ul id="agenda-list" class="agenda-list">
-                </ul>
+            <ul id="agenda-list" class="agenda-list"></ul>
         </div>
 
         <div class="music-area">
-            <div id="youtube-player" style="display: none;"></div>
+            <div id="youtube-player" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
             <button id="music-toggle" class="system-btn">
                 <span id="music-icon">🎵</span> <span id="music-status">음악 켜기</span>
             </button>
@@ -49,31 +56,46 @@
 
     <div id="admin-modal" class="modal">
         <div class="modal-card">
-            <h2>설정</h2>
-            
-            <div class="input-group">
-                <label>연수 등록부 QR (이미지 업로드)</label>
-                <input type="file" id="admin-qr-upload" accept="image/*">
-            </div>
-            
-            <div class="input-group">
-                <label>회의 제목</label>
-                <input type="text" id="admin-title-input" placeholder="회의 제목을 입력하세요">
-            </div>
-            
-            <div class="input-group">
-                <label>회의 순서 (줄바꿈으로 구분)</label>
-                <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
-            </div>
-            
-            <div class="input-group">
-                <label>유튜브 배경음악 링크</label>
-                <input type="text" id="admin-yt-input" placeholder="유튜브 영상 주소(URL) 전체 입력">
+            <h2>⚙️ 설정 관리</h2>
+            <div class="modal-scroll-area">
+                
+                <div class="input-group">
+                    <label>회의 제목</label>
+                    <input type="text" id="admin-title-input" placeholder="회의 제목을 입력하세요">
+                </div>
+                
+                <div class="input-group">
+                    <label>회의 순서 (줄바꿈으로 구분)</label>
+                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
+                </div>
+
+                <div class="qr-setting-box">
+                    <h4>📌 첫 번째 QR</h4>
+                    <input type="text" id="admin-qr-title-1" placeholder="제목 (예: 연수 등록부)">
+                    <input type="file" id="admin-qr-upload-1" accept="image/*">
+                </div>
+                
+                <div class="qr-setting-box">
+                    <h4>📌 두 번째 QR</h4>
+                    <input type="text" id="admin-qr-title-2" placeholder="제목 (예: 만족도 조사)">
+                    <input type="file" id="admin-qr-upload-2" accept="image/*">
+                </div>
+
+                <div class="qr-setting-box">
+                    <h4>📌 세 번째 QR</h4>
+                    <input type="text" id="admin-qr-title-3" placeholder="제목 입력 (사용 안할 시 비워둠)">
+                    <input type="file" id="admin-qr-upload-3" accept="image/*">
+                </div>
+                
+                <div class="input-group" style="margin-top: 15px;">
+                    <label>유튜브 배경음악 링크</label>
+                    <input type="text" id="admin-yt-input" placeholder="유튜브 영상 주소(URL) 전체 입력">
+                </div>
             </div>
             
             <div class="modal-actions">
                 <button id="close-admin" class="btn-secondary">취소</button>
-                <button id="save-admin" class="btn-primary">저장</button>
+                <button id="save-admin" class="btn-primary">저장하기</button>
             </div>
         </div>
     </div>
