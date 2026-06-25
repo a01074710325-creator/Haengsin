@@ -9,43 +9,36 @@
 </head>
 <body>
     <div class="dashboard">
-        <div class="widget clock-widget">
-            <div class="analog-clock">
-                <div class="hand hour" id="hour-hand"></div>
-                <div class="hand minute" id="min-hand"></div>
-                <div class="hand second" id="sec-hand"></div>
-                <div class="center-dot"></div>
-                <div class="number n12">12</div>
-                <div class="number n3">3</div>
-                <div class="number n6">6</div>
-                <div class="number n9">9</div>
-            </div>
+        <div class="clock-area">
+            <div id="digital-clock" class="digital-clock">00:00:00</div>
         </div>
 
         <div class="qr-area">
             <div class="qr-container" id="qr-box-1" style="display:none;">
                 <p class="qr-label" id="qr-label-1">QR 1</p>
-                <img id="qr-image-1" src="" alt="QR Code 1">
+                <div class="qr-image-wrap"><img id="qr-image-1" src="" alt="QR Code 1"></div>
             </div>
             <div class="qr-container" id="qr-box-2" style="display:none;">
                 <p class="qr-label" id="qr-label-2">QR 2</p>
-                <img id="qr-image-2" src="" alt="QR Code 2">
+                <div class="qr-image-wrap"><img id="qr-image-2" src="" alt="QR Code 2"></div>
             </div>
             <div class="qr-container" id="qr-box-3" style="display:none;">
                 <p class="qr-label" id="qr-label-3">QR 3</p>
-                <img id="qr-image-3" src="" alt="QR Code 3">
+                <div class="qr-image-wrap"><img id="qr-image-3" src="" alt="QR Code 3"></div>
             </div>
         </div>
 
-        <div class="main-card">
+        <div class="main-pocket-card">
+            <div class="pocket-hem"></div>
             <h1 id="meeting-title">교직원 회의</h1>
-            <ul id="agenda-list" class="agenda-list"></ul>
+            <ul id="agenda-list" class="agenda-list">
+                </ul>
         </div>
 
         <div class="music-area">
             <div id="youtube-player" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
             <button id="music-toggle" class="system-btn">
-                <span id="music-icon">🎵</span> <span id="music-status">음악 켜기</span>
+                <span id="music-icon">🎵</span> <span id="music-status">음악 재생</span>
             </button>
         </div>
 
@@ -56,9 +49,14 @@
 
     <div id="admin-modal" class="modal">
         <div class="modal-card">
-            <h2>⚙️ 설정 관리</h2>
+            <h2>⚙️ 회의 설정 관리</h2>
             <div class="modal-scroll-area">
                 
+                <div class="input-group">
+                    <label>🔠 전체 글자 크기 조절</label>
+                    <input type="range" id="admin-font-size" min="12" max="32" value="18">
+                </div>
+
                 <div class="input-group">
                     <label>회의 제목</label>
                     <input type="text" id="admin-title-input" placeholder="회의 제목을 입력하세요">
@@ -66,7 +64,7 @@
                 
                 <div class="input-group">
                     <label>회의 순서 (줄바꿈으로 구분)</label>
-                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
+                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회 선언&#10;2. 안건 토의"></textarea>
                 </div>
 
                 <div class="qr-setting-box">
@@ -94,7 +92,7 @@
             </div>
             
             <div class="modal-actions">
-                <button id="close-admin" class="btn-secondary">취소</button>
+                <button id="close-admin" class="btn-secondary">닫기</button>
                 <button id="save-admin" class="btn-primary">저장하기</button>
             </div>
         </div>
