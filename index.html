@@ -8,51 +8,46 @@
     <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard felt-bg">
-        <div class="stitch-border"></div>
+    <div class="dashboard felt-dark stitch-white">
+        
+        <div class="main-card felt-light stitch-brown">
+            
+            <header class="card-header">
+                <div class="clock-area">
+                    <div id="digital-clock">00:00:00</div>
+                </div>
+                <div class="qr-area" id="qr-wrapper">
+                    </div>
+            </header>
 
-        <div class="clock-area felt-patch">
-            <div class="analog-clock">
-                <div class="hand hour" id="hour-hand"></div>
-                <div class="hand minute" id="min-hand"></div>
-                <div class="hand second" id="sec-hand"></div>
-                <div class="center-dot"></div>
-                <div class="number n12">12</div>
-                <div class="number n3">3</div>
-                <div class="number n6">6</div>
-                <div class="number n9">9</div>
-            </div>
-        </div>
+            <main class="card-center">
+                <h1 id="meeting-title">교직원 회의</h1>
+                
+                <div class="music-control">
+                    <div id="youtube-player" class="hidden-player"></div>
+                    <button id="music-toggle" class="simple-icon-btn" title="음악 재생/정지">
+                        <svg id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="7"/>
+                            <polygon points="10,8 16,12 10,16"/>
+                        </svg>
+                        <svg id="icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none;">
+                            <rect x="2" y="2" width="20" height="20" rx="7"/>
+                            <line x1="9" y1="8" x2="9" y2="16"/>
+                            <line x1="15" y1="8" x2="15" y2="16"/>
+                        </svg>
+                    </button>
+                </div>
+            </main>
 
-        <div class="qr-area">
-            <div class="qr-container felt-patch" id="qr-box-1" style="display:none;">
-                <p class="qr-label" id="qr-label-1">QR 1</p>
-                <div class="qr-image-wrap"><img id="qr-image-1" src="" alt="QR 1"></div>
-            </div>
-            <div class="qr-container felt-patch" id="qr-box-2" style="display:none;">
-                <p class="qr-label" id="qr-label-2">QR 2</p>
-                <div class="qr-image-wrap"><img id="qr-image-2" src="" alt="QR 2"></div>
-            </div>
-            <div class="qr-container felt-patch" id="qr-box-3" style="display:none;">
-                <p class="qr-label" id="qr-label-3">QR 3</p>
-                <div class="qr-image-wrap"><img id="qr-image-3" src="" alt="QR 3"></div>
-            </div>
-        </div>
+            <footer class="card-footer">
+                <div class="agenda-box">
+                    <h3>회의 순서</h3>
+                    <div class="agenda-pills" id="agenda-list">
+                        </div>
+                </div>
+            </footer>
 
-        <div class="main-pocket-card felt-pocket">
-            <div class="pocket-stitch"></div>
-            <h1 id="meeting-title">교직원 회의</h1>
-            <ul id="agenda-list" class="agenda-list">
-                </ul>
-        </div>
-
-        <div class="music-area">
-            <div id="youtube-player" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
-            <button id="music-toggle" class="simple-btn">▶ 음악 재생</button>
-        </div>
-
-        <div class="admin-area">
-            <button id="open-admin" class="simple-btn outline">⚙️ 설정</button>
+            <button id="open-admin" class="admin-open-btn">⚙️</button>
         </div>
     </div>
 
@@ -63,17 +58,17 @@
                 
                 <div class="input-group">
                     <label>🔠 전체 글자 크기 조절</label>
-                    <input type="range" id="admin-font-size" min="12" max="32" value="18">
+                    <input type="range" id="admin-font-size" min="14" max="32" value="18">
                 </div>
 
                 <div class="input-group">
                     <label>회의 제목</label>
-                    <input type="text" id="admin-title-input" placeholder="회의 제목을 입력하세요">
+                    <input type="text" id="admin-title-input" placeholder="교직원 회의">
                 </div>
                 
                 <div class="input-group">
-                    <label>회의 순서 (줄바꿈으로 구분)</label>
-                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
+                    <label>회의 순서 (가로 캡슐형으로 표시됨, 줄바꿈 구분)</label>
+                    <textarea id="admin-agenda-input" rows="3" placeholder="1. 교장선생님 말씀&#10;2. 안건 토의"></textarea>
                 </div>
 
                 <div class="qr-setting-box">
@@ -90,7 +85,7 @@
 
                 <div class="qr-setting-box">
                     <h4>📌 세 번째 QR</h4>
-                    <input type="text" id="admin-qr-title-3" placeholder="제목 입력 (사용 안할 시 비워둠)">
+                    <input type="text" id="admin-qr-title-3" placeholder="비워두면 표시되지 않습니다">
                     <input type="file" id="admin-qr-upload-3" accept="image/*">
                 </div>
                 
