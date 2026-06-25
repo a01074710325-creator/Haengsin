@@ -1,9 +1,10 @@
 :root {
     --primary-brown: #5D4037;
-    --card-bg: #FFFFFF;
     --text-primary: #3E2723;
-    --accent-color: #D84315; 
-    --yellow-bg: #FBC02D; /* 진한 노란색 */
+    --accent-orange: #D84315; 
+    --bg-light-yellow: #FFF59D;   /* 전체 연한 노란색 바탕 */
+    --bg-pocket-yellow: #FFCA28;  /* 주머니 진한 노란색 */
+    --base-font-size: 18px;       /* 동적 폰트 사이즈 변수 */
 }
 
 * { 
@@ -13,136 +14,135 @@
 
 body, html { 
     width: 100%; height: 100%; overflow: hidden; 
-    background-color: var(--yellow-bg);
+    background-color: var(--bg-light-yellow);
+    font-size: var(--base-font-size);
 }
 
 .dashboard {
     width: 100vw; height: 100vh; position: relative; padding: 40px;
-    background-color: var(--yellow-bg);
 }
 
-/* 스티치(바느질) 효과 */
+/* 바깥쪽 스티치 (바느질) 효과 */
 .dashboard::before {
-    content: "";
-    position: absolute;
-    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    content: ""; position: absolute;
+    top: 25px; left: 25px; right: 25px; bottom: 25px;
     border: 4px dashed var(--primary-brown);
-    border-radius: 30px;
-    pointer-events: none; /* 클릭 방해 금지 */
-    z-index: 100;
+    border-radius: 30px; pointer-events: none; z-index: 100;
 }
 
-/* 위젯 및 시계 */
-.widget {
-    background: var(--card-bg); border-radius: 30px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;
+/* 상단 좌측: 디지털 시계 */
+.clock-area {
+    position: absolute; top: 60px; left: 60px; z-index: 10;
 }
-.clock-widget { top: 50px; left: 50px; width: 220px; height: 220px; z-index: 10; }
-.analog-clock {
-    width: 160px; height: 160px; border-radius: 50%; position: relative;
-    background: #FFF; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); border: 4px solid var(--primary-brown);
+.digital-clock {
+    font-size: 3.5rem; font-weight: 900; color: var(--accent-orange);
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.8); letter-spacing: 2px;
 }
-.analog-clock .hand {
-    position: absolute; bottom: 50%; left: 50%; transform-origin: bottom;
-    border-radius: 10px; background: var(--text-primary);
-}
-.hour { width: 6px; height: 45px; z-index: 3; }
-.minute { width: 4px; height: 65px; z-index: 2; opacity: 0.8; }
-.second { width: 2px; height: 75px; background: var(--accent-color); z-index: 4; }
-.center-dot {
-    position: absolute; top: 50%; left: 50%; width: 14px; height: 14px;
-    background: var(--text-primary); border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
-}
-.number { position: absolute; font-weight: 800; color: var(--primary-brown); font-size: 1.1rem; }
-.n12 { top: 10px; left: 50%; transform: translateX(-50%); }
-.n3 { right: 12px; top: 50%; transform: translateY(-50%); }
-.n6 { bottom: 10px; left: 50%; transform: translateX(-50%); }
-.n9 { left: 12px; top: 50%; transform: translateY(-50%); }
 
-/* 3단 QR 영역 */
+/* 우측: 3단 QR 영역 */
 .qr-area {
-    position: absolute; top: 50px; right: 50px; z-index: 10;
+    position: absolute; top: 60px; right: 60px; z-index: 10;
     display: flex; flex-direction: column; gap: 20px;
-    max-height: calc(100vh - 100px); overflow-y: auto; padding-right: 10px;
+    max-height: calc(100vh - 120px); overflow-y: auto; padding-right: 15px;
 }
 .qr-area::-webkit-scrollbar { width: 8px; }
 .qr-area::-webkit-scrollbar-thumb { background: rgba(93, 64, 55, 0.3); border-radius: 10px; }
-.qr-container {
-    background: #FFF9C4; padding: 18px; border-radius: 20px;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1); text-align: center; border: 3px solid var(--primary-brown);
-}
-.qr-label { font-size: 1.2rem; font-weight: 800; color: var(--primary-brown); margin-bottom: 10px; }
-.qr-container img { width: 130px; height: 130px; object-fit: contain; border-radius: 8px; background: #FFF; padding: 5px;}
 
-/* 메인 식순 카드 */
-.main-card {
+.qr-container {
+    background: #FFFDE7; padding: 15px; border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1); text-align: center; 
+    border: 3px solid var(--primary-brown); width: 180px;
+}
+.qr-label { 
+    font-size: 1.1rem; font-weight: 800; color: var(--primary-brown); 
+    margin-bottom: 10px; word-break: keep-all; 
+}
+.qr-image-wrap {
+    background: #FFF; padding: 5px; border-radius: 8px; border: 2px solid #E0E0E0;
+}
+.qr-container img { width: 100%; height: auto; object-fit: contain; }
+
+/* 중앙: 주머니 디자인 카드 */
+.main-pocket-card {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: var(--card-bg); border-radius: 40px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 60px 80px;
-    min-width: 600px; max-width: 850px; text-align: center; border: 4px solid #FFFDE7;
+    background-color: var(--bg-pocket-yellow);
+    border: 4px dashed var(--primary-brown);
+    /* 주머니 특유의 하단 라운드 처리 */
+    border-radius: 10px 10px 60px 60px; 
+    box-shadow: inset 0 -15px 30px rgba(0,0,0,0.1), 0 20px 40px rgba(0,0,0,0.15); 
+    padding: 70px 80px; min-width: 650px; max-width: 900px; text-align: center;
 }
+/* 주머니 상단 봉제선 느낌 */
+.pocket-hem {
+    position: absolute; top: 30px; left: -4px; right: -4px;
+    height: 4px; border-top: 3px solid rgba(93, 64, 55, 0.3); border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+
 #meeting-title {
-    font-size: 3.5rem; font-weight: 800; margin-bottom: 40px; color: var(--primary-brown);
+    font-size: 3rem; font-weight: 800; margin-bottom: 40px; color: var(--primary-brown);
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
 }
-.agenda-list { list-style: none; text-align: left; display: inline-block; }
+
+/* 식순 리스트 (점선 및 핀 아이콘 적용) */
+.agenda-list { list-style: none; text-align: left; display: inline-block; width: 100%; }
 .agenda-list li {
-    font-size: 1.8rem; font-weight: 700; color: var(--text-primary);
-    margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px dashed #E0E0E0; display: flex; align-items: center;
+    font-size: 1.5rem; font-weight: 700; color: var(--text-primary);
+    padding: 20px 10px; border-bottom: 2px dotted rgba(93, 64, 55, 0.4); 
+    display: flex; align-items: center;
 }
-.agenda-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.agenda-list li:first-child { border-top: 2px dotted rgba(93, 64, 55, 0.4); }
+.agenda-list li:last-child { border-bottom: none; }
 .agenda-list li::before {
     content: "📌"; margin-right: 15px; font-size: 1.5rem;
 }
 
-/* 하단 버튼 */
-.music-area { position: absolute; bottom: 50px; right: 50px; z-index: 10; }
-.admin-area { position: absolute; bottom: 50px; left: 50px; z-index: 10; }
+/* 하단 버튼 영역 */
+.music-area { position: absolute; bottom: 60px; right: 60px; z-index: 10; }
+.admin-area { position: absolute; bottom: 60px; left: 60px; z-index: 10; }
 
 .system-btn, .icon-btn {
-    background: var(--primary-brown); color: #FFF; border: none; border-radius: 50px;
-    padding: 16px 30px; font-size: 1.2rem; font-weight: 800; cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2); transition: transform 0.2s, background 0.2s;
-    display: flex; align-items: center; gap: 10px;
+    background: #FFB74D; color: #FFF; border: none; border-radius: 10px;
+    padding: 15px 25px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s, background 0.2s;
+    display: flex; align-items: center; gap: 8px;
 }
-.system-btn:hover, .icon-btn:hover { transform: scale(1.05); }
-.system-btn.active { background: var(--accent-color); }
+.system-btn:hover, .icon-btn:hover { transform: translateY(-3px); }
+.system-btn.active { background: #FFA726; }
 .icon-btn { background: #FFF9C4; color: var(--primary-brown); border: 2px solid var(--primary-brown); }
 
-/* 모달창 */
+/* 모달 설정창 */
 .modal {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
     z-index: 999; justify-content: center; align-items: center;
 }
 .modal-card {
-    background: #FFF; width: 500px; max-height: 90vh; border-radius: 30px;
+    background: #FFF; width: 550px; max-height: 90vh; border-radius: 20px;
     padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 4px solid var(--primary-brown);
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; font-size: 16px; /* 모달 내부는 폰트 고정 */
 }
-.modal-card h2 { font-size: 1.6rem; margin-bottom: 20px; font-weight: 800; color: var(--primary-brown); border-bottom: 2px solid #EEE; padding-bottom: 15px;}
-.modal-scroll-area {
-    flex: 1; overflow-y: auto; padding-right: 10px;
-}
+.modal-card h2 { font-size: 1.5rem; margin-bottom: 20px; font-weight: 800; color: var(--primary-brown); border-bottom: 2px solid #EEE; padding-bottom: 15px;}
+.modal-scroll-area { flex: 1; overflow-y: auto; padding-right: 10px; }
 .modal-scroll-area::-webkit-scrollbar { width: 6px; }
 .modal-scroll-area::-webkit-scrollbar-thumb { background: #CCC; border-radius: 10px; }
 
-.input-group { margin-bottom: 15px; }
-.input-group label { display: block; margin-bottom: 8px; font-weight: 800; font-size: 1rem; color: var(--text-primary); }
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--text-primary); }
 .input-group input[type="text"], .input-group textarea {
-    width: 100%; padding: 12px; border: 2px solid #DDD; border-radius: 12px; font-size: 1rem; background: #FAFAFA;
+    width: 100%; padding: 12px; border: 2px solid #DDD; border-radius: 8px; font-size: 1rem; background: #FAFAFA;
 }
+.input-group input[type="range"] { width: 100%; cursor: pointer; }
 .input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--primary-brown); }
 
 .qr-setting-box {
-    background: #FFF9C4; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 2px dashed var(--primary-brown);
+    background: #FFFDE7; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px dashed var(--primary-brown);
 }
 .qr-setting-box h4 { margin-bottom: 10px; color: var(--primary-brown); }
-.qr-setting-box input[type="text"] { width: 100%; padding: 10px; border: 1px solid #CCC; border-radius: 8px; margin-bottom: 8px; }
+.qr-setting-box input[type="text"] { width: 100%; padding: 10px; border: 1px solid #CCC; border-radius: 5px; margin-bottom: 8px; }
 
 .modal-actions { display: flex; gap: 15px; margin-top: 20px; }
 .modal-actions button {
-    flex: 1; padding: 15px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+    flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
 }
 .btn-secondary { background: #E0E0E0; color: var(--text-primary); }
 .btn-primary { background: var(--primary-brown); color: #FFF; }
