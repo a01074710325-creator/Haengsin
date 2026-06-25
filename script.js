@@ -3,36 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAdminEvents();
 });
 
-// 1. 시계 구동
+// 1. 디지털 시계 구동 (HH:MM:SS 포맷)
 function updateClock() {
     const now = new Date();
-    const sec = now.getSeconds();
-    const min = now.getMinutes();
-    const hour = now.getHours();
-
-    const secDeg = (sec / 60) * 360;
-    const minDeg = ((min + sec/60) / 60) * 360;
-    const hourDeg = ((hour % 12 + min/60) / 12) * 360;
-
-    document.getElementById('sec-hand').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
-    document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
-    document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
 }
 setInterval(updateClock, 1000);
+updateClock();
 
-// 2. 유튜브 URL ID 추출 로직 (다양한 포맷 대응)
+// 2. 유튜브 URL ID 추출 로직
 function extractVideoID(url) {
     const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const match = url.match(regExp);
     return (match && match[1]) ? match[1] : url; 
 }
 
-// 3. 유튜브 API 플레이어 제어 (재생 오류 해결)
+// 3. 유튜브 API 플레이어 제어 (1x1 픽셀로 재생 오류 회피)
 let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
     player = new YT.Player('youtube-player', {
-        height: '1', width: '1', // 브라우저 차단 방지를 위해 1 픽셀 크기 할당
+        height: '1', width: '1', 
         videoId: savedYtId,
         playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': savedYtId, 'playsinline': 1 },
         events: { 'onReady': onPlayerReady }
@@ -54,8 +49,8 @@ function onPlayerReady(event) {
                 toggleBtn.classList.add('active');
             } else {
                 player.pauseVideo();
-                statusText.textContent = "음악 켜기";
-                iconText.textContent = "🎵";
+                statusText.textContent = "음악 재생";
+                iconText.textContent = "▶️";
                 toggleBtn.classList.remove('active');
             }
             isPlaying = !isPlaying;
@@ -63,8 +58,12 @@ function onPlayerReady(event) {
     }
 }
 
-// 4. 로컬 스토리지 데이터 렌더링 (3단 QR 처리)
+// 4. 로컬 스토리지 데이터 렌더링
 function loadDashboardData() {
+    // 폰트 크기 로드 및 적용
+    const savedFontSize = localStorage.getItem('meetingFontSize') || '18';
+    document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
+
     const title = localStorage.getItem('meetingTitle') || "교직원 회의";
     const agenda = localStorage.getItem('meetingAgenda') || "1. 개회 선언\n2. 주요 안건 토의\n3. 공지사항 전달\n4. 폐회";
 
@@ -98,7 +97,7 @@ function loadDashboardData() {
         }
     }
 
-    // 설정된 QR이 단 하나도 없을 경우 기본값 노출
+    // 설정된 QR이 단 하나도 없을 경우 기본 1개 노출
     if (!hasAnyQr) {
         document.getElementById('qr-box-1').style.display = 'block';
         document.getElementById('qr-label-1').textContent = "연수 등록부";
@@ -106,15 +105,22 @@ function loadDashboardData() {
     }
 }
 
-// 5. 모달 제어 및 병렬 데이터 저장
+// 5. 관리자 설정창 이벤트 바인딩 및 저장
 function setupAdminEvents() {
     const adminModal = document.getElementById('admin-modal');
     const openAdminBtn = document.getElementById('open-admin');
     const closeAdminBtn = document.getElementById('close-admin');
     const saveAdminBtn = document.getElementById('save-admin');
+    const fontSizeSlider = document.getElementById('admin-font-size');
+
+    // 슬라이더 조절 시 실시간 화면 폰트 크기 반영
+    fontSizeSlider.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty('--base-font-size', `${e.target.value}px`);
+    });
 
     if (openAdminBtn) {
         openAdminBtn.addEventListener('click', () => {
+            fontSizeSlider.value = localStorage.getItem('meetingFontSize') || '18';
             document.getElementById('admin-title-input').value = localStorage.getItem('meetingTitle') || "교직원 회의";
             document.getElementById('admin-agenda-input').value = localStorage.getItem('meetingAgenda') || "";
             document.getElementById('admin-yt-input').value = localStorage.getItem('meetingYtUrl') || "";
@@ -127,7 +133,11 @@ function setupAdminEvents() {
     }
 
     if (closeAdminBtn) {
-        closeAdminBtn.addEventListener('click', () => adminModal.style.display = "none");
+        closeAdminBtn.addEventListener('click', () => {
+            // 취소 시 원래 폰트 크기로 원복
+            document.documentElement.style.setProperty('--base-font-size', `${localStorage.getItem('meetingFontSize') || '18'}px`);
+            adminModal.style.display = "none";
+        });
     }
 
     function saveFileToStorage(file, storageKey) {
@@ -147,6 +157,7 @@ function setupAdminEvents() {
 
     if (saveAdminBtn) {
         saveAdminBtn.addEventListener('click', async () => {
+            localStorage.setItem('meetingFontSize', fontSizeSlider.value);
             localStorage.setItem('meetingTitle', document.getElementById('admin-title-input').value);
             localStorage.setItem('meetingAgenda', document.getElementById('admin-agenda-input').value);
             
