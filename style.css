@@ -1,10 +1,8 @@
 :root {
-    --stitch-brown: #5D4037;
-    --felt-bg: #FDF1D6;       /* 연한 베이지 펠트 바탕 */
-    --felt-pocket: #F0A500;   /* 진한 머스타드 주머니 */
-    --felt-patch: #FFF8E7;    /* 밝은 덧댐 조각 */
-    --accent-red: #D84315; 
-    --text-primary: #4A332A;
+    --color-felt-dark: #3E312B; /* 진한 브라운 펠트 (사진2) */
+    --color-felt-light: #FDFBF7; /* 밝은 크림색 펠트 (사진1) */
+    --color-orange: #D35400; /* 시계 및 포인트 오렌지 (사진1) */
+    --color-text-dark: #4A332A;
     --base-font-size: 18px;
 }
 
@@ -15,156 +13,141 @@
 
 body, html { 
     width: 100%; height: 100%; overflow: hidden; 
-    background-color: var(--felt-bg);
     font-size: var(--base-font-size);
 }
 
+/* ==========================================
+   펠트 질감 및 스티치 (SVG 노이즈 필터 활용)
+========================================== */
+.felt-dark {
+    background-color: var(--color-felt-dark);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+}
+.felt-light {
+    background-color: var(--color-felt-light);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+}
+
 .dashboard {
-    width: 100vw; height: 100vh; position: relative; padding: 40px;
+    width: 100vw; height: 100vh; padding: 40px; 
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
 }
 
-/* 전체 테두리 스티치 효과 */
-.stitch-border {
-    position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px;
-    border: 4px dashed rgba(93, 64, 55, 0.4);
-    border-radius: 30px; pointer-events: none; z-index: 1;
+/* 외부 흰색 스티치 */
+.stitch-white::after {
+    content: ""; position: absolute;
+    top: 25px; left: 25px; right: 25px; bottom: 25px;
+    border: 4px dashed rgba(255, 255, 255, 0.7);
+    border-radius: 40px; pointer-events: none;
 }
 
-/* 펠트 덧댐(Patch) 공통 스타일 */
-.felt-patch {
-    background-color: var(--felt-patch);
-    border: 3px dashed var(--stitch-brown);
-    border-radius: 20px;
-    box-shadow: 2px 5px 10px rgba(0,0,0,0.08);
+/* ==========================================
+   메인 카드 레이아웃 (사진 1 구조)
+========================================== */
+.main-card {
+    width: 100%; height: 100%; border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 50px; position: relative; z-index: 10;
+}
+/* 내부 브라운 스티치 */
+.stitch-brown::before {
+    content: ""; position: absolute;
+    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    border: 2px dashed rgba(74, 51, 42, 0.3);
+    border-radius: 20px; pointer-events: none;
 }
 
-/* 좌측 상단: 아날로그 시계 */
-.clock-area {
-    position: absolute; top: 50px; left: 50px; z-index: 10;
-    padding: 15px; border-radius: 50%;
-}
-.analog-clock {
-    width: 150px; height: 150px; border-radius: 50%; position: relative;
-    background: #FFF; border: 3px solid rgba(93, 64, 55, 0.2);
-}
-.analog-clock .hand {
-    position: absolute; bottom: 50%; left: 50%; transform-origin: bottom;
-    border-radius: 10px; background: var(--stitch-brown);
-}
-.hour { width: 6px; height: 40px; z-index: 3; }
-.minute { width: 4px; height: 60px; z-index: 2; opacity: 0.8; }
-.second { width: 2px; height: 65px; background: var(--accent-red); z-index: 4; }
-.center-dot {
-    position: absolute; top: 50%; left: 50%; width: 12px; height: 12px;
-    background: var(--stitch-brown); border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
-}
-.number { position: absolute; font-weight: 800; color: var(--stitch-brown); font-size: 1.1rem; }
-.n12 { top: 8px; left: 50%; transform: translateX(-50%); }
-.n3 { right: 10px; top: 50%; transform: translateY(-50%); }
-.n6 { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.n9 { left: 10px; top: 50%; transform: translateY(-50%); }
+/* 상단: 시계(좌), QR(우) */
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; }
 
-/* 우측: 3단 반응형 QR 영역 */
-.qr-area {
-    position: absolute; top: 50px; right: 50px; bottom: 100px; /* 음악 버튼 침범 방지 */
-    width: 220px; display: flex; flex-direction: column; gap: 15px;
-    justify-content: flex-start; z-index: 10;
+#digital-clock {
+    font-size: 3.5rem; font-weight: 900; color: var(--color-orange);
+    letter-spacing: 2px;
 }
-.qr-container {
-    flex: 1 1 0; min-height: 0; /* Flexbox 기반 자동 크기 조절의 핵심 */
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 15px;
+
+.qr-area { display: flex; gap: 15px; }
+.qr-item {
+    background: #FFF; padding: 10px; border-radius: 12px;
+    border: 2px solid #EAEAEA; text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 140px;
 }
-.qr-label { 
-    font-size: 1.1rem; font-weight: 800; color: var(--stitch-brown); 
-    margin-bottom: 8px; word-break: keep-all; text-align: center;
+.qr-item p { font-size: 0.9rem; font-weight: 800; color: var(--color-text-dark); margin-bottom: 8px; }
+.qr-item img { width: 100%; height: auto; object-fit: contain; }
+
+/* 중앙: 타이틀 및 아이콘 버튼 */
+.card-center { text-align: center; z-index: 5; margin-bottom: 20px; }
+#meeting-title {
+    font-size: 4rem; font-weight: 800; color: var(--color-text-dark);
+    letter-spacing: -1px; margin-bottom: 30px;
 }
-.qr-image-wrap {
-    flex: 1; min-height: 0; width: 100%;
-    background: #FFF; padding: 5px; border-radius: 8px; border: 1px solid #E0E0E0;
+
+.music-control { display: flex; justify-content: center; }
+.hidden-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* 심플 라인 아이콘 버튼 (사진 3) */
+.simple-icon-btn {
+    background: transparent; border: none; cursor: pointer;
+    color: #888; transition: color 0.2s, transform 0.2s;
     display: flex; align-items: center; justify-content: center;
 }
-.qr-container img { max-height: 100%; max-width: 100%; object-fit: contain; }
+.simple-icon-btn svg { width: 48px; height: 48px; }
+.simple-icon-btn:hover { color: var(--color-orange); transform: scale(1.1); }
+.simple-icon-btn.active { color: var(--color-orange); }
 
-/* 중앙: 메인 주머니 디자인 */
-.main-pocket-card {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background-color: var(--felt-pocket);
-    border: 4px dashed var(--stitch-brown);
-    border-radius: 10px 10px 60px 60px; /* 주머니 라운드 */
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
-    padding: 60px 80px; min-width: 600px; max-width: 850px; text-align: center;
-    z-index: 5;
+/* 하단: 회의 순서 박스 (사진 1) */
+.card-footer { z-index: 5; }
+.agenda-box {
+    background: rgba(250, 248, 245, 0.8); border: 1px solid #EAEAEA;
+    border-radius: 20px; padding: 30px; width: 100%;
 }
-.pocket-stitch {
-    position: absolute; top: 25px; left: -4px; right: -4px;
-    height: 0; border-top: 3px dashed rgba(93, 64, 55, 0.6);
-}
-
-#meeting-title {
-    font-size: 3.2rem; font-weight: 800; margin-bottom: 30px; color: var(--stitch-brown);
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+.agenda-box h3 { font-size: 1.4rem; color: var(--color-text-dark); margin-bottom: 15px; font-weight: 800;}
+.agenda-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.agenda-pills span {
+    background: #FDEBD0; color: var(--color-text-dark);
+    padding: 12px 24px; border-radius: 50px; font-weight: 700; font-size: 1.2rem;
 }
 
-/* 식순 리스트 */
-.agenda-list { list-style: none; text-align: left; display: inline-block; width: 100%; }
-.agenda-list li {
-    font-size: 1.5rem; font-weight: 700; color: var(--text-primary);
-    padding: 15px 10px; border-bottom: 2px dotted rgba(93, 64, 55, 0.4); 
-    display: flex; align-items: center;
+/* 관리자 톱니바퀴 (숨김 처리 형태) */
+.admin-open-btn {
+    position: absolute; bottom: 30px; left: 30px; z-index: 20;
+    background: none; border: none; font-size: 1.5rem; opacity: 0.1; cursor: pointer;
+    transition: opacity 0.2s;
 }
-.agenda-list li:first-child { border-top: 2px dotted rgba(93, 64, 55, 0.4); }
-.agenda-list li:last-child { border-bottom: none; }
-.agenda-list li::before { content: "📌"; margin-right: 15px; font-size: 1.5rem; }
+.admin-open-btn:hover { opacity: 1; }
 
-/* 하단 버튼 영역 */
-.music-area { position: absolute; bottom: 40px; right: 50px; z-index: 15; }
-.admin-area { position: absolute; bottom: 40px; left: 50px; z-index: 15; }
-
-/* 심플 버튼 공통 스타일 */
-.simple-btn {
-    background: var(--stitch-brown); color: #FFF; border: none; border-radius: 30px;
-    padding: 12px 24px; font-size: 1rem; font-weight: 800; cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s;
-}
-.simple-btn:hover { background: #4A332A; }
-.simple-btn.active { background: var(--accent-red); }
-.simple-btn.outline { background: #FFF; color: var(--stitch-brown); border: 2px solid var(--stitch-brown); }
-.simple-btn.outline:hover { background: #F5E6CC; }
-
-/* 설정 모달 */
+/* ==========================================
+   설정 모달창
+========================================== */
 .modal {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
     z-index: 999; justify-content: center; align-items: center;
 }
 .modal-card {
-    background: #FFF; width: 550px; max-height: 90vh; border-radius: 20px;
-    padding: 30px; border: 4px dashed var(--stitch-brown);
+    background: #FFF; width: 500px; max-height: 90vh; border-radius: 20px;
+    padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     display: flex; flex-direction: column; font-size: 16px;
 }
-.modal-card h2 { font-size: 1.4rem; margin-bottom: 20px; font-weight: 800; color: var(--stitch-brown); border-bottom: 2px solid #EEE; padding-bottom: 15px;}
+.modal-card h2 { font-size: 1.4rem; margin-bottom: 20px; font-weight: 800; color: var(--color-text-dark); border-bottom: 2px solid #EEE; padding-bottom: 15px;}
 .modal-scroll-area { flex: 1; overflow-y: auto; padding-right: 10px; }
 .modal-scroll-area::-webkit-scrollbar { width: 6px; }
 .modal-scroll-area::-webkit-scrollbar-thumb { background: #CCC; border-radius: 10px; }
 
 .input-group { margin-bottom: 20px; }
-.input-group label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--text-primary); }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--color-text-dark); }
 .input-group input[type="text"], .input-group textarea {
     width: 100%; padding: 12px; border: 2px solid #DDD; border-radius: 8px; font-size: 1rem;
 }
 .input-group input[type="range"] { width: 100%; cursor: pointer; }
-.input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--stitch-brown); }
+.input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--color-orange); }
 
-.qr-setting-box {
-    background: #FFF9C4; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px dashed var(--stitch-brown);
-}
-.qr-setting-box h4 { margin-bottom: 10px; color: var(--stitch-brown); }
+.qr-setting-box { background: #F9F9F9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #E0E0E0; }
+.qr-setting-box h4 { margin-bottom: 10px; color: var(--color-text-dark); }
 .qr-setting-box input[type="text"] { width: 100%; padding: 10px; border: 1px solid #CCC; border-radius: 5px; margin-bottom: 8px; }
 
 .modal-actions { display: flex; gap: 15px; margin-top: 20px; }
-.modal-actions button {
-    flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
-}
-.btn-secondary { background: #E0E0E0; color: var(--text-primary); }
-.btn-primary { background: var(--stitch-brown); color: #FFF; }
+.modal-actions button { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
+.btn-secondary { background: #E0E0E0; color: var(--color-text-dark); }
+.btn-primary { background: var(--color-text-dark); color: #FFF; }
