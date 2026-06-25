@@ -3,14 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAdminEvents();
 });
 
-// 1. 디지털 시계 구동 (HH:MM:SS 포맷)
+// 1. 아날로그 시계 구동
 function updateClock() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    
-    document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+    const sec = now.getSeconds();
+    const min = now.getMinutes();
+    const hour = now.getHours();
+
+    const secDeg = (sec / 60) * 360;
+    const minDeg = ((min + sec/60) / 60) * 360;
+    const hourDeg = ((hour % 12 + min/60) / 12) * 360;
+
+    document.getElementById('sec-hand').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
+    document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
+    document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -22,7 +28,7 @@ function extractVideoID(url) {
     return (match && match[1]) ? match[1] : url; 
 }
 
-// 3. 유튜브 API 플레이어 제어 (1x1 픽셀로 재생 오류 회피)
+// 3. 유튜브 API 및 심플 버튼 제어
 let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
@@ -36,21 +42,17 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) {
     const toggleBtn = document.getElementById('music-toggle');
-    const statusText = document.getElementById('music-status');
-    const iconText = document.getElementById('music-icon');
     let isPlaying = false;
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             if (!isPlaying) {
                 player.playVideo();
-                statusText.textContent = "음악 정지";
-                iconText.textContent = "⏸️";
+                toggleBtn.textContent = "⏸ 음악 정지";
                 toggleBtn.classList.add('active');
             } else {
                 player.pauseVideo();
-                statusText.textContent = "음악 재생";
-                iconText.textContent = "▶️";
+                toggleBtn.textContent = "▶ 음악 재생";
                 toggleBtn.classList.remove('active');
             }
             isPlaying = !isPlaying;
@@ -60,7 +62,7 @@ function onPlayerReady(event) {
 
 // 4. 로컬 스토리지 데이터 렌더링
 function loadDashboardData() {
-    // 폰트 크기 로드 및 적용
+    // 폰트 크기 로드
     const savedFontSize = localStorage.getItem('meetingFontSize') || '18';
     document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
 
@@ -80,7 +82,7 @@ function loadDashboardData() {
         }
     });
 
-    // 1~3번 QR 코드 렌더링
+    // 반응형 QR 렌더링
     let hasAnyQr = false;
     for (let i = 1; i <= 3; i++) {
         const qrTitle = localStorage.getItem(`meetingQrTitle${i}`);
@@ -88,7 +90,7 @@ function loadDashboardData() {
         const box = document.getElementById(`qr-box-${i}`);
         
         if (qrTitle || qrImage) {
-            box.style.display = 'block';
+            box.style.display = 'flex'; // block 대신 flex 사용
             document.getElementById(`qr-label-${i}`).textContent = qrTitle || `QR ${i}`;
             document.getElementById(`qr-image-${i}`).src = qrImage || "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Empty";
             hasAnyQr = true;
@@ -97,15 +99,14 @@ function loadDashboardData() {
         }
     }
 
-    // 설정된 QR이 단 하나도 없을 경우 기본 1개 노출
     if (!hasAnyQr) {
-        document.getElementById('qr-box-1').style.display = 'block';
+        document.getElementById('qr-box-1').style.display = 'flex';
         document.getElementById('qr-label-1').textContent = "연수 등록부";
         document.getElementById('qr-image-1').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Welcome";
     }
 }
 
-// 5. 관리자 설정창 이벤트 바인딩 및 저장
+// 5. 관리자 모달 및 저장 프로세스
 function setupAdminEvents() {
     const adminModal = document.getElementById('admin-modal');
     const openAdminBtn = document.getElementById('open-admin');
@@ -113,7 +114,6 @@ function setupAdminEvents() {
     const saveAdminBtn = document.getElementById('save-admin');
     const fontSizeSlider = document.getElementById('admin-font-size');
 
-    // 슬라이더 조절 시 실시간 화면 폰트 크기 반영
     fontSizeSlider.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--base-font-size', `${e.target.value}px`);
     });
@@ -134,7 +134,6 @@ function setupAdminEvents() {
 
     if (closeAdminBtn) {
         closeAdminBtn.addEventListener('click', () => {
-            // 취소 시 원래 폰트 크기로 원복
             document.documentElement.style.setProperty('--base-font-size', `${localStorage.getItem('meetingFontSize') || '18'}px`);
             adminModal.style.display = "none";
         });
@@ -167,7 +166,6 @@ function setupAdminEvents() {
                 localStorage.setItem('meetingYtId', extractVideoID(ytInputUrl));
             }
 
-            // 3개의 QR 데이터 병렬 저장
             const uploadPromises = [];
             for (let i = 1; i <= 3; i++) {
                 localStorage.setItem(`meetingQrTitle${i}`, document.getElementById(`admin-qr-title-${i}`).value);
