@@ -3,13 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAdminEvents();
 });
 
-// 1. 디지털 시계 구동 (사진 1 오렌지색 시계)
+// 1. 아날로그 시계 구동
 function updateClock() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+    const sec = now.getSeconds();
+    const min = now.getMinutes();
+    const hour = now.getHours();
+
+    const secDeg = (sec / 60) * 360;
+    const minDeg = ((min + sec/60) / 60) * 360;
+    const hourDeg = ((hour % 12 + min/60) / 12) * 360;
+
+    document.getElementById('sec-hand').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
+    document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
+    document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -21,7 +28,7 @@ function extractVideoID(url) {
     return (match && match[1]) ? match[1] : url; 
 }
 
-// 3. 유튜브 API 및 심플 SVG 아이콘 스위칭 제어
+// 3. 유튜브 플레이어 및 아이콘 토글 제어
 let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
@@ -37,6 +44,7 @@ function onPlayerReady(event) {
     const toggleBtn = document.getElementById('music-toggle');
     const iconPlay = document.getElementById('icon-play');
     const iconPause = document.getElementById('icon-pause');
+    const textLabel = document.getElementById('music-text');
     let isPlaying = false;
 
     if (toggleBtn) {
@@ -46,92 +54,93 @@ function onPlayerReady(event) {
                 iconPlay.style.display = 'none';
                 iconPause.style.display = 'block';
                 toggleBtn.classList.add('active');
+                textLabel.textContent = "음악 정지";
             } else {
                 player.pauseVideo();
                 iconPlay.style.display = 'block';
                 iconPause.style.display = 'none';
                 toggleBtn.classList.remove('active');
+                textLabel.textContent = "음악 켜기";
             }
             isPlaying = !isPlaying;
         });
     }
 }
 
-// 4. 로컬 스토리지 데이터 렌더링 (가로형 QR 및 캡슐형 식순)
+// 4. 데이터 렌더링 및 개별 폰트 사이즈 적용
 function loadDashboardData() {
-    // 폰트 크기
-    const savedFontSize = localStorage.getItem('meetingFontSize') || '18';
-    document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
-
-    // 제목
-    document.getElementById('meeting-title').textContent = localStorage.getItem('meetingTitle') || "교직원 회의";
+    // 폰트 크기 로드 및 CSS 변수에 할당 (개별 제어)
+    const fTitle = localStorage.getItem('meetingFontTitle') || '50';
+    const fAgenda = localStorage.getItem('meetingFontAgenda') || '24';
+    const fQR = localStorage.getItem('meetingFontQR') || '16';
     
-    // 식순 (캡슐 형태로 분할 렌더링)
-    const agenda = localStorage.getItem('meetingAgenda') || "1. 교장선생님 말씀\n2. 교무부/성적계\n3. 학생안전부";
-    const listWrapper = document.getElementById('agenda-list');
-    listWrapper.innerHTML = "";
-    
-    // 줄바꿈으로 입력된 내용을 한 줄의 텍스트( ' / ' 구분)로 합쳐서 하나의 캡슐에 넣기 (사진1 형태)
-    const agendaItems = agenda.split('\n').map(item => item.trim()).filter(item => item);
-    if(agendaItems.length > 0) {
-        const combinedText = agendaItems.join(' / ');
-        const pill = document.createElement('span');
-        pill.textContent = combinedText;
-        listWrapper.appendChild(pill);
-    }
+    document.documentElement.style.setProperty('--font-size-title', `${fTitle}px`);
+    document.documentElement.style.setProperty('--font-size-agenda', `${fAgenda}px`);
+    document.documentElement.style.setProperty('--font-size-qr', `${fQR}px`);
 
-    // QR 코드 가로 나열 렌더링
-    const qrWrapper = document.getElementById('qr-wrapper');
-    qrWrapper.innerHTML = "";
+    // 텍스트 데이터 로드
+    document.getElementById('meeting-title').textContent = localStorage.getItem('meetingTitle') || "2026 교직원 회의";
+    const agenda = localStorage.getItem('meetingAgenda') || "1. 개회 선언\n2. 학교장 인사말씀\n3. 안건 토의";
+
+    const list = document.getElementById('agenda-list');
+    list.innerHTML = "";
+    agenda.split('\n').forEach(item => {
+        if (item.trim()) {
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+        }
+    });
+
+    // 반응형 QR 로드
     let hasAnyQr = false;
-
     for (let i = 1; i <= 3; i++) {
         const qrTitle = localStorage.getItem(`meetingQrTitle${i}`);
         const qrImage = localStorage.getItem(`meetingQrImage${i}`);
+        const box = document.getElementById(`qr-box-${i}`);
         
         if (qrTitle || qrImage) {
+            box.style.display = 'flex';
+            document.getElementById(`qr-label-${i}`).textContent = qrTitle || `QR ${i}`;
+            document.getElementById(`qr-image-${i}`).src = qrImage || "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Empty";
             hasAnyQr = true;
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'qr-item';
-            
-            const p = document.createElement('p');
-            p.textContent = qrTitle || `QR ${i}`;
-            
-            const img = document.createElement('img');
-            img.src = qrImage || "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Empty";
-            
-            itemDiv.appendChild(p);
-            itemDiv.appendChild(img);
-            qrWrapper.appendChild(itemDiv);
+        } else {
+            box.style.display = 'none';
         }
     }
 
+    // 초기 기본값
     if (!hasAnyQr) {
-        qrWrapper.innerHTML = `
-            <div class="qr-item">
-                <p>출석 확인</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Welcome" alt="Welcome QR">
-            </div>
-        `;
+        document.getElementById('qr-box-1').style.display = 'flex';
+        document.getElementById('qr-label-1').textContent = "연수 등록부";
+        document.getElementById('qr-image-1').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Welcome";
     }
 }
 
-// 5. 모달 및 저장 로직
+// 5. 관리자 모달 제어 (실시간 폰트 프리뷰 포함)
 function setupAdminEvents() {
     const adminModal = document.getElementById('admin-modal');
     const openAdminBtn = document.getElementById('open-admin');
     const closeAdminBtn = document.getElementById('close-admin');
     const saveAdminBtn = document.getElementById('save-admin');
-    const fontSizeSlider = document.getElementById('admin-font-size');
+    
+    const sliderTitle = document.getElementById('admin-font-title');
+    const sliderAgenda = document.getElementById('admin-font-agenda');
+    const sliderQR = document.getElementById('admin-font-qr');
 
-    fontSizeSlider.addEventListener('input', (e) => {
-        document.documentElement.style.setProperty('--base-font-size', `${e.target.value}px`);
-    });
+    // 슬라이더 조절 시 실시간 프리뷰
+    sliderTitle.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-title', `${e.target.value}px`));
+    sliderAgenda.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-agenda', `${e.target.value}px`));
+    sliderQR.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-qr', `${e.target.value}px`));
 
+    // 모달 열기 및 기존 데이터 바인딩
     if (openAdminBtn) {
         openAdminBtn.addEventListener('click', () => {
-            fontSizeSlider.value = localStorage.getItem('meetingFontSize') || '18';
-            document.getElementById('admin-title-input').value = localStorage.getItem('meetingTitle') || "교직원 회의";
+            sliderTitle.value = localStorage.getItem('meetingFontTitle') || '50';
+            sliderAgenda.value = localStorage.getItem('meetingFontAgenda') || '24';
+            sliderQR.value = localStorage.getItem('meetingFontQR') || '16';
+
+            document.getElementById('admin-title-input').value = localStorage.getItem('meetingTitle') || "2026 교직원 회의";
             document.getElementById('admin-agenda-input').value = localStorage.getItem('meetingAgenda') || "";
             document.getElementById('admin-yt-input').value = localStorage.getItem('meetingYtUrl') || "";
             
@@ -142,9 +151,12 @@ function setupAdminEvents() {
         });
     }
 
+    // 모달 닫기 (실시간 프리뷰 원상복구)
     if (closeAdminBtn) {
         closeAdminBtn.addEventListener('click', () => {
-            document.documentElement.style.setProperty('--base-font-size', `${localStorage.getItem('meetingFontSize') || '18'}px`);
+            document.documentElement.style.setProperty('--font-size-title', `${localStorage.getItem('meetingFontTitle') || '50'}px`);
+            document.documentElement.style.setProperty('--font-size-agenda', `${localStorage.getItem('meetingFontAgenda') || '24'}px`);
+            document.documentElement.style.setProperty('--font-size-qr', `${localStorage.getItem('meetingFontQR') || '16'}px`);
             adminModal.style.display = "none";
         });
     }
@@ -164,9 +176,13 @@ function setupAdminEvents() {
         });
     }
 
+    // 최종 저장 프로세스
     if (saveAdminBtn) {
         saveAdminBtn.addEventListener('click', async () => {
-            localStorage.setItem('meetingFontSize', fontSizeSlider.value);
+            localStorage.setItem('meetingFontTitle', sliderTitle.value);
+            localStorage.setItem('meetingFontAgenda', sliderAgenda.value);
+            localStorage.setItem('meetingFontQR', sliderQR.value);
+
             localStorage.setItem('meetingTitle', document.getElementById('admin-title-input').value);
             localStorage.setItem('meetingAgenda', document.getElementById('admin-agenda-input').value);
             
@@ -188,7 +204,7 @@ function setupAdminEvents() {
             
             await Promise.all(uploadPromises);
 
-            alert("설정이 성공적으로 반영되었습니다.");
+            alert("성공적으로 저장되었습니다.");
             location.reload();
         });
     }
