@@ -1,49 +1,47 @@
-/* 기본 시스템 변수 설정 (Galaxy One UI Light Theme 기반) */
 :root {
-    --sys-bg: #F2F2F7;         /* 부드러운 시스템 배경색 */
-    --card-bg: #FFFFFF;        /* 카드 배경색 */
-    --text-primary: #1C1C1E;   /* 주 텍스트 */
-    --text-secondary: #8E8E93; /* 보조 텍스트 */
-    --accent-blue: #0381FE;    /* 갤럭시 시그니처 포인트 블루 */
-    --border-radius-lg: 32px;  /* 큰 모서리 곡률 */
-    --border-radius-sm: 16px;  /* 작은 모서리 곡률 */
-    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.06);
+    --primary-brown: #5D4037;
+    --card-bg: #FFFFFF;
+    --text-primary: #3E2723;
+    --accent-color: #D84315; 
+    --yellow-bg: #FBC02D; /* 진한 노란색 */
 }
 
 * { 
     margin: 0; padding: 0; box-sizing: border-box; 
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    font-family: 'NanumSquareRound', sans-serif !important;
 }
 
 body, html { 
     width: 100%; height: 100%; overflow: hidden; 
-    background-color: var(--sys-bg);
-    color: var(--text-primary);
+    background-color: var(--yellow-bg);
 }
 
 .dashboard {
     width: 100vw; height: 100vh; position: relative; padding: 40px;
+    background-color: var(--yellow-bg);
 }
 
-/* =========================================
-   위젯 (Widgets) 공통 스타일
-========================================= */
-.widget {
-    background: var(--card-bg);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-soft);
+/* 스티치(바느질) 효과 */
+.dashboard::before {
+    content: "";
     position: absolute;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    border: 4px dashed var(--primary-brown);
+    border-radius: 30px;
+    pointer-events: none; /* 클릭 방해 금지 */
+    z-index: 100;
 }
 
-/* 상단 좌측 시계 위젯 */
-.clock-widget {
-    top: 40px; left: 40px; width: 220px; height: 220px;
+/* 위젯 및 시계 */
+.widget {
+    background: var(--card-bg); border-radius: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
+.clock-widget { top: 50px; left: 50px; width: 220px; height: 220px; z-index: 10; }
 .analog-clock {
     width: 160px; height: 160px; border-radius: 50%; position: relative;
-    background: var(--sys-bg);
-    box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+    background: #FFF; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); border: 4px solid var(--primary-brown);
 }
 .analog-clock .hand {
     position: absolute; bottom: 50%; left: 50%; transform-origin: bottom;
@@ -51,99 +49,100 @@ body, html {
 }
 .hour { width: 6px; height: 45px; z-index: 3; }
 .minute { width: 4px; height: 65px; z-index: 2; opacity: 0.8; }
-.second { width: 2px; height: 75px; background: var(--accent-blue); z-index: 4; }
+.second { width: 2px; height: 75px; background: var(--accent-color); z-index: 4; }
 .center-dot {
     position: absolute; top: 50%; left: 50%; width: 14px; height: 14px;
-    background: var(--text-primary); border-radius: 50%;
-    transform: translate(-50%, -50%); z-index: 5;
+    background: var(--text-primary); border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
 }
-.number { position: absolute; font-weight: 700; color: var(--text-secondary); font-size: 1rem; }
+.number { position: absolute; font-weight: 800; color: var(--primary-brown); font-size: 1.1rem; }
 .n12 { top: 10px; left: 50%; transform: translateX(-50%); }
 .n3 { right: 12px; top: 50%; transform: translateY(-50%); }
 .n6 { bottom: 10px; left: 50%; transform: translateX(-50%); }
 .n9 { left: 12px; top: 50%; transform: translateY(-50%); }
 
-/* 상단 우측 QR 위젯 */
-.qr-widget {
-    top: 40px; right: 40px; width: 240px; padding: 25px;
+/* 3단 QR 영역 */
+.qr-area {
+    position: absolute; top: 50px; right: 50px; z-index: 10;
+    display: flex; flex-direction: column; gap: 20px;
+    max-height: calc(100vh - 100px); overflow-y: auto; padding-right: 10px;
 }
-.widget-title {
-    font-size: 1.1rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 15px;
+.qr-area::-webkit-scrollbar { width: 8px; }
+.qr-area::-webkit-scrollbar-thumb { background: rgba(93, 64, 55, 0.3); border-radius: 10px; }
+.qr-container {
+    background: #FFF9C4; padding: 18px; border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1); text-align: center; border: 3px solid var(--primary-brown);
 }
-.qr-image-wrapper {
-    width: 100%; aspect-ratio: 1/1; border-radius: var(--border-radius-sm);
-    overflow: hidden; background: var(--sys-bg); display: flex; align-items: center; justify-content: center;
-}
-#qr-image { width: 90%; height: 90%; object-fit: contain; }
+.qr-label { font-size: 1.2rem; font-weight: 800; color: var(--primary-brown); margin-bottom: 10px; }
+.qr-container img { width: 130px; height: 130px; object-fit: contain; border-radius: 8px; background: #FFF; padding: 5px;}
 
-/* =========================================
-   중앙 메인 식순 카드
-========================================= */
+/* 메인 식순 카드 */
 .main-card {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: var(--card-bg); border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-soft); padding: 60px 80px;
-    min-width: 600px; max-width: 900px; text-align: left;
+    background: var(--card-bg); border-radius: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 60px 80px;
+    min-width: 600px; max-width: 850px; text-align: center; border: 4px solid #FFFDE7;
 }
 #meeting-title {
-    font-size: 3.5rem; font-weight: 800; letter-spacing: -1.5px;
-    margin-bottom: 40px; color: var(--text-primary);
+    font-size: 3.5rem; font-weight: 800; margin-bottom: 40px; color: var(--primary-brown);
 }
-.agenda-list { list-style: none; }
+.agenda-list { list-style: none; text-align: left; display: inline-block; }
 .agenda-list li {
-    font-size: 1.6rem; font-weight: 600; color: var(--text-primary);
-    margin-bottom: 20px; padding-bottom: 20px;
-    border-bottom: 1px solid #E5E5EA; display: flex; align-items: center;
+    font-size: 1.8rem; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px dashed #E0E0E0; display: flex; align-items: center;
 }
 .agenda-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .agenda-list li::before {
-    content: ""; display: inline-block; width: 8px; height: 8px;
-    background: var(--accent-blue); border-radius: 50%; margin-right: 20px;
+    content: "📌"; margin-right: 15px; font-size: 1.5rem;
 }
 
-/* =========================================
-   하단 컨트롤 (음악 및 설정)
-========================================= */
-.music-area { position: absolute; bottom: 40px; right: 40px; }
-.admin-area { position: absolute; bottom: 40px; left: 40px; }
+/* 하단 버튼 */
+.music-area { position: absolute; bottom: 50px; right: 50px; z-index: 10; }
+.admin-area { position: absolute; bottom: 50px; left: 50px; z-index: 10; }
 
 .system-btn, .icon-btn {
-    background: var(--card-bg); color: var(--text-primary);
-    border: none; border-radius: 50px; padding: 18px 32px;
-    font-size: 1.1rem; font-weight: 700; cursor: pointer;
-    box-shadow: var(--shadow-soft); transition: transform 0.2s, background 0.2s;
+    background: var(--primary-brown); color: #FFF; border: none; border-radius: 50px;
+    padding: 16px 30px; font-size: 1.2rem; font-weight: 800; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); transition: transform 0.2s, background 0.2s;
     display: flex; align-items: center; gap: 10px;
 }
-.system-btn:hover, .icon-btn:hover { transform: scale(1.02); }
-.system-btn.active { background: var(--accent-blue); color: #FFF; }
+.system-btn:hover, .icon-btn:hover { transform: scale(1.05); }
+.system-btn.active { background: var(--accent-color); }
+.icon-btn { background: #FFF9C4; color: var(--primary-brown); border: 2px solid var(--primary-brown); }
 
-.icon-btn { padding: 15px 25px; color: var(--text-secondary); }
-
-/* =========================================
-   모달 (One UI 설정창 스타일)
-========================================= */
+/* 모달창 */
 .modal {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
     z-index: 999; justify-content: center; align-items: center;
 }
 .modal-card {
-    background: var(--sys-bg); width: 480px; border-radius: var(--border-radius-lg);
-    padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    background: #FFF; width: 500px; max-height: 90vh; border-radius: 30px;
+    padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 4px solid var(--primary-brown);
+    display: flex; flex-direction: column;
 }
-.modal-card h2 { font-size: 1.8rem; margin-bottom: 30px; font-weight: 700; letter-spacing: -0.5px; }
-.input-group { margin-bottom: 20px; }
-.input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: var(--text-secondary); }
-.input-group input, .input-group textarea {
-    width: 100%; padding: 16px; border: none; border-radius: var(--border-radius-sm);
-    background: var(--card-bg); font-size: 1rem; color: var(--text-primary);
+.modal-card h2 { font-size: 1.6rem; margin-bottom: 20px; font-weight: 800; color: var(--primary-brown); border-bottom: 2px solid #EEE; padding-bottom: 15px;}
+.modal-scroll-area {
+    flex: 1; overflow-y: auto; padding-right: 10px;
 }
-.input-group input:focus, .input-group textarea:focus { outline: 2px solid var(--accent-blue); }
+.modal-scroll-area::-webkit-scrollbar { width: 6px; }
+.modal-scroll-area::-webkit-scrollbar-thumb { background: #CCC; border-radius: 10px; }
 
-.modal-actions { display: flex; gap: 15px; margin-top: 35px; }
-.modal-actions button {
-    flex: 1; padding: 16px; border: none; border-radius: 50px;
-    font-size: 1.1rem; font-weight: 700; cursor: pointer;
+.input-group { margin-bottom: 15px; }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 800; font-size: 1rem; color: var(--text-primary); }
+.input-group input[type="text"], .input-group textarea {
+    width: 100%; padding: 12px; border: 2px solid #DDD; border-radius: 12px; font-size: 1rem; background: #FAFAFA;
 }
-.btn-secondary { background: #E5E5EA; color: var(--text-primary); }
-.btn-primary { background: var(--accent-blue); color: #FFF; }
+.input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--primary-brown); }
+
+.qr-setting-box {
+    background: #FFF9C4; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 2px dashed var(--primary-brown);
+}
+.qr-setting-box h4 { margin-bottom: 10px; color: var(--primary-brown); }
+.qr-setting-box input[type="text"] { width: 100%; padding: 10px; border: 1px solid #CCC; border-radius: 8px; margin-bottom: 8px; }
+
+.modal-actions { display: flex; gap: 15px; margin-top: 20px; }
+.modal-actions button {
+    flex: 1; padding: 15px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+}
+.btn-secondary { background: #E0E0E0; color: var(--text-primary); }
+.btn-primary { background: var(--primary-brown); color: #FFF; }
