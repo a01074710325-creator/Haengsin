@@ -8,28 +8,39 @@
     <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard">
-        <div class="clock-area">
-            <div id="digital-clock" class="digital-clock">00:00:00</div>
+    <div class="dashboard felt-bg">
+        <div class="stitch-border"></div>
+
+        <div class="clock-area felt-patch">
+            <div class="analog-clock">
+                <div class="hand hour" id="hour-hand"></div>
+                <div class="hand minute" id="min-hand"></div>
+                <div class="hand second" id="sec-hand"></div>
+                <div class="center-dot"></div>
+                <div class="number n12">12</div>
+                <div class="number n3">3</div>
+                <div class="number n6">6</div>
+                <div class="number n9">9</div>
+            </div>
         </div>
 
         <div class="qr-area">
-            <div class="qr-container" id="qr-box-1" style="display:none;">
+            <div class="qr-container felt-patch" id="qr-box-1" style="display:none;">
                 <p class="qr-label" id="qr-label-1">QR 1</p>
-                <div class="qr-image-wrap"><img id="qr-image-1" src="" alt="QR Code 1"></div>
+                <div class="qr-image-wrap"><img id="qr-image-1" src="" alt="QR 1"></div>
             </div>
-            <div class="qr-container" id="qr-box-2" style="display:none;">
+            <div class="qr-container felt-patch" id="qr-box-2" style="display:none;">
                 <p class="qr-label" id="qr-label-2">QR 2</p>
-                <div class="qr-image-wrap"><img id="qr-image-2" src="" alt="QR Code 2"></div>
+                <div class="qr-image-wrap"><img id="qr-image-2" src="" alt="QR 2"></div>
             </div>
-            <div class="qr-container" id="qr-box-3" style="display:none;">
+            <div class="qr-container felt-patch" id="qr-box-3" style="display:none;">
                 <p class="qr-label" id="qr-label-3">QR 3</p>
-                <div class="qr-image-wrap"><img id="qr-image-3" src="" alt="QR Code 3"></div>
+                <div class="qr-image-wrap"><img id="qr-image-3" src="" alt="QR 3"></div>
             </div>
         </div>
 
-        <div class="main-pocket-card">
-            <div class="pocket-hem"></div>
+        <div class="main-pocket-card felt-pocket">
+            <div class="pocket-stitch"></div>
             <h1 id="meeting-title">교직원 회의</h1>
             <ul id="agenda-list" class="agenda-list">
                 </ul>
@@ -37,13 +48,11 @@
 
         <div class="music-area">
             <div id="youtube-player" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
-            <button id="music-toggle" class="system-btn">
-                <span id="music-icon">🎵</span> <span id="music-status">음악 재생</span>
-            </button>
+            <button id="music-toggle" class="simple-btn">▶ 음악 재생</button>
         </div>
 
         <div class="admin-area">
-            <button id="open-admin" class="icon-btn">⚙️ 설정</button>
+            <button id="open-admin" class="simple-btn outline">⚙️ 설정</button>
         </div>
     </div>
 
@@ -64,7 +73,7 @@
                 
                 <div class="input-group">
                     <label>회의 순서 (줄바꿈으로 구분)</label>
-                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회 선언&#10;2. 안건 토의"></textarea>
+                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
                 </div>
 
                 <div class="qr-setting-box">
