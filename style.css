@@ -1,0 +1,149 @@
+/* 기본 시스템 변수 설정 (Galaxy One UI Light Theme 기반) */
+:root {
+    --sys-bg: #F2F2F7;         /* 부드러운 시스템 배경색 */
+    --card-bg: #FFFFFF;        /* 카드 배경색 */
+    --text-primary: #1C1C1E;   /* 주 텍스트 */
+    --text-secondary: #8E8E93; /* 보조 텍스트 */
+    --accent-blue: #0381FE;    /* 갤럭시 시그니처 포인트 블루 */
+    --border-radius-lg: 32px;  /* 큰 모서리 곡률 */
+    --border-radius-sm: 16px;  /* 작은 모서리 곡률 */
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+
+body, html { 
+    width: 100%; height: 100%; overflow: hidden; 
+    background-color: var(--sys-bg);
+    color: var(--text-primary);
+}
+
+.dashboard {
+    width: 100vw; height: 100vh; position: relative; padding: 40px;
+}
+
+/* =========================================
+   위젯 (Widgets) 공통 스타일
+========================================= */
+.widget {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-soft);
+    position: absolute;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* 상단 좌측 시계 위젯 */
+.clock-widget {
+    top: 40px; left: 40px; width: 220px; height: 220px;
+}
+.analog-clock {
+    width: 160px; height: 160px; border-radius: 50%; position: relative;
+    background: var(--sys-bg);
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+}
+.analog-clock .hand {
+    position: absolute; bottom: 50%; left: 50%; transform-origin: bottom;
+    border-radius: 10px; background: var(--text-primary);
+}
+.hour { width: 6px; height: 45px; z-index: 3; }
+.minute { width: 4px; height: 65px; z-index: 2; opacity: 0.8; }
+.second { width: 2px; height: 75px; background: var(--accent-blue); z-index: 4; }
+.center-dot {
+    position: absolute; top: 50%; left: 50%; width: 14px; height: 14px;
+    background: var(--text-primary); border-radius: 50%;
+    transform: translate(-50%, -50%); z-index: 5;
+}
+.number { position: absolute; font-weight: 700; color: var(--text-secondary); font-size: 1rem; }
+.n12 { top: 10px; left: 50%; transform: translateX(-50%); }
+.n3 { right: 12px; top: 50%; transform: translateY(-50%); }
+.n6 { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.n9 { left: 12px; top: 50%; transform: translateY(-50%); }
+
+/* 상단 우측 QR 위젯 */
+.qr-widget {
+    top: 40px; right: 40px; width: 240px; padding: 25px;
+}
+.widget-title {
+    font-size: 1.1rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 15px;
+}
+.qr-image-wrapper {
+    width: 100%; aspect-ratio: 1/1; border-radius: var(--border-radius-sm);
+    overflow: hidden; background: var(--sys-bg); display: flex; align-items: center; justify-content: center;
+}
+#qr-image { width: 90%; height: 90%; object-fit: contain; }
+
+/* =========================================
+   중앙 메인 식순 카드
+========================================= */
+.main-card {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--card-bg); border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-soft); padding: 60px 80px;
+    min-width: 600px; max-width: 900px; text-align: left;
+}
+#meeting-title {
+    font-size: 3.5rem; font-weight: 800; letter-spacing: -1.5px;
+    margin-bottom: 40px; color: var(--text-primary);
+}
+.agenda-list { list-style: none; }
+.agenda-list li {
+    font-size: 1.6rem; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #E5E5EA; display: flex; align-items: center;
+}
+.agenda-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.agenda-list li::before {
+    content: ""; display: inline-block; width: 8px; height: 8px;
+    background: var(--accent-blue); border-radius: 50%; margin-right: 20px;
+}
+
+/* =========================================
+   하단 컨트롤 (음악 및 설정)
+========================================= */
+.music-area { position: absolute; bottom: 40px; right: 40px; }
+.admin-area { position: absolute; bottom: 40px; left: 40px; }
+
+.system-btn, .icon-btn {
+    background: var(--card-bg); color: var(--text-primary);
+    border: none; border-radius: 50px; padding: 18px 32px;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer;
+    box-shadow: var(--shadow-soft); transition: transform 0.2s, background 0.2s;
+    display: flex; align-items: center; gap: 10px;
+}
+.system-btn:hover, .icon-btn:hover { transform: scale(1.02); }
+.system-btn.active { background: var(--accent-blue); color: #FFF; }
+
+.icon-btn { padding: 15px 25px; color: var(--text-secondary); }
+
+/* =========================================
+   모달 (One UI 설정창 스타일)
+========================================= */
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
+    z-index: 999; justify-content: center; align-items: center;
+}
+.modal-card {
+    background: var(--sys-bg); width: 480px; border-radius: var(--border-radius-lg);
+    padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.modal-card h2 { font-size: 1.8rem; margin-bottom: 30px; font-weight: 700; letter-spacing: -0.5px; }
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: var(--text-secondary); }
+.input-group input, .input-group textarea {
+    width: 100%; padding: 16px; border: none; border-radius: var(--border-radius-sm);
+    background: var(--card-bg); font-size: 1rem; color: var(--text-primary);
+}
+.input-group input:focus, .input-group textarea:focus { outline: 2px solid var(--accent-blue); }
+
+.modal-actions { display: flex; gap: 15px; margin-top: 35px; }
+.modal-actions button {
+    flex: 1; padding: 16px; border: none; border-radius: 50px;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer;
+}
+.btn-secondary { background: #E5E5EA; color: var(--text-primary); }
+.btn-primary { background: var(--accent-blue); color: #FFF; }
