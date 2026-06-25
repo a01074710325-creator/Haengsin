@@ -3,32 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAdminEvents();
 });
 
-// 1. 아날로그 시계 구동
+// 1. 디지털 시계 구동 (사진 1 오렌지색 시계)
 function updateClock() {
     const now = new Date();
-    const sec = now.getSeconds();
-    const min = now.getMinutes();
-    const hour = now.getHours();
-
-    const secDeg = (sec / 60) * 360;
-    const minDeg = ((min + sec/60) / 60) * 360;
-    const hourDeg = ((hour % 12 + min/60) / 12) * 360;
-
-    document.getElementById('sec-hand').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
-    document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
-    document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// 2. 유튜브 URL ID 추출 로직
+// 2. 유튜브 URL ID 추출
 function extractVideoID(url) {
     const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const match = url.match(regExp);
     return (match && match[1]) ? match[1] : url; 
 }
 
-// 3. 유튜브 API 및 심플 버튼 제어
+// 3. 유튜브 API 및 심플 SVG 아이콘 스위칭 제어
 let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
@@ -42,17 +35,21 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) {
     const toggleBtn = document.getElementById('music-toggle');
+    const iconPlay = document.getElementById('icon-play');
+    const iconPause = document.getElementById('icon-pause');
     let isPlaying = false;
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             if (!isPlaying) {
                 player.playVideo();
-                toggleBtn.textContent = "⏸ 음악 정지";
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
                 toggleBtn.classList.add('active');
             } else {
                 player.pauseVideo();
-                toggleBtn.textContent = "▶ 음악 재생";
+                iconPlay.style.display = 'block';
+                iconPause.style.display = 'none';
                 toggleBtn.classList.remove('active');
             }
             isPlaying = !isPlaying;
@@ -60,53 +57,66 @@ function onPlayerReady(event) {
     }
 }
 
-// 4. 로컬 스토리지 데이터 렌더링
+// 4. 로컬 스토리지 데이터 렌더링 (가로형 QR 및 캡슐형 식순)
 function loadDashboardData() {
-    // 폰트 크기 로드
+    // 폰트 크기
     const savedFontSize = localStorage.getItem('meetingFontSize') || '18';
     document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
 
-    const title = localStorage.getItem('meetingTitle') || "교직원 회의";
-    const agenda = localStorage.getItem('meetingAgenda') || "1. 개회 선언\n2. 주요 안건 토의\n3. 공지사항 전달\n4. 폐회";
-
-    document.getElementById('meeting-title').textContent = title;
+    // 제목
+    document.getElementById('meeting-title').textContent = localStorage.getItem('meetingTitle') || "교직원 회의";
     
-    // 식순 렌더링
-    const list = document.getElementById('agenda-list');
-    list.innerHTML = "";
-    agenda.split('\n').forEach(item => {
-        if (item.trim()) {
-            const li = document.createElement('li');
-            li.textContent = item;
-            list.appendChild(li);
-        }
-    });
+    // 식순 (캡슐 형태로 분할 렌더링)
+    const agenda = localStorage.getItem('meetingAgenda') || "1. 교장선생님 말씀\n2. 교무부/성적계\n3. 학생안전부";
+    const listWrapper = document.getElementById('agenda-list');
+    listWrapper.innerHTML = "";
+    
+    // 줄바꿈으로 입력된 내용을 한 줄의 텍스트( ' / ' 구분)로 합쳐서 하나의 캡슐에 넣기 (사진1 형태)
+    const agendaItems = agenda.split('\n').map(item => item.trim()).filter(item => item);
+    if(agendaItems.length > 0) {
+        const combinedText = agendaItems.join(' / ');
+        const pill = document.createElement('span');
+        pill.textContent = combinedText;
+        listWrapper.appendChild(pill);
+    }
 
-    // 반응형 QR 렌더링
+    // QR 코드 가로 나열 렌더링
+    const qrWrapper = document.getElementById('qr-wrapper');
+    qrWrapper.innerHTML = "";
     let hasAnyQr = false;
+
     for (let i = 1; i <= 3; i++) {
         const qrTitle = localStorage.getItem(`meetingQrTitle${i}`);
         const qrImage = localStorage.getItem(`meetingQrImage${i}`);
-        const box = document.getElementById(`qr-box-${i}`);
         
         if (qrTitle || qrImage) {
-            box.style.display = 'flex'; // block 대신 flex 사용
-            document.getElementById(`qr-label-${i}`).textContent = qrTitle || `QR ${i}`;
-            document.getElementById(`qr-image-${i}`).src = qrImage || "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Empty";
             hasAnyQr = true;
-        } else {
-            box.style.display = 'none';
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'qr-item';
+            
+            const p = document.createElement('p');
+            p.textContent = qrTitle || `QR ${i}`;
+            
+            const img = document.createElement('img');
+            img.src = qrImage || "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Empty";
+            
+            itemDiv.appendChild(p);
+            itemDiv.appendChild(img);
+            qrWrapper.appendChild(itemDiv);
         }
     }
 
     if (!hasAnyQr) {
-        document.getElementById('qr-box-1').style.display = 'flex';
-        document.getElementById('qr-label-1').textContent = "연수 등록부";
-        document.getElementById('qr-image-1').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Welcome";
+        qrWrapper.innerHTML = `
+            <div class="qr-item">
+                <p>출석 확인</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Welcome" alt="Welcome QR">
+            </div>
+        `;
     }
 }
 
-// 5. 관리자 모달 및 저장 프로세스
+// 5. 모달 및 저장 로직
 function setupAdminEvents() {
     const adminModal = document.getElementById('admin-modal');
     const openAdminBtn = document.getElementById('open-admin');
@@ -178,7 +188,7 @@ function setupAdminEvents() {
             
             await Promise.all(uploadPromises);
 
-            alert("설정이 성공적으로 저장되었습니다.");
+            alert("설정이 성공적으로 반영되었습니다.");
             location.reload();
         });
     }
