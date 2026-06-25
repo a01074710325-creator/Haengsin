@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAdminEvents();
 });
 
-// 1. 아날로그 시계 구동
 function updateClock() {
     const now = new Date();
     const sec = now.getSeconds();
@@ -21,14 +20,12 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// 2. 유튜브 URL ID 추출
 function extractVideoID(url) {
     const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const match = url.match(regExp);
     return (match && match[1]) ? match[1] : url; 
 }
 
-// 3. 유튜브 플레이어 및 아이콘 토글 제어
 let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
@@ -67,9 +64,7 @@ function onPlayerReady(event) {
     }
 }
 
-// 4. 데이터 렌더링 및 개별 폰트 사이즈 적용
 function loadDashboardData() {
-    // 폰트 크기 로드 및 CSS 변수에 할당 (개별 제어)
     const fTitle = localStorage.getItem('meetingFontTitle') || '50';
     const fAgenda = localStorage.getItem('meetingFontAgenda') || '24';
     const fQR = localStorage.getItem('meetingFontQR') || '16';
@@ -78,7 +73,6 @@ function loadDashboardData() {
     document.documentElement.style.setProperty('--font-size-agenda', `${fAgenda}px`);
     document.documentElement.style.setProperty('--font-size-qr', `${fQR}px`);
 
-    // 텍스트 데이터 로드
     document.getElementById('meeting-title').textContent = localStorage.getItem('meetingTitle') || "2026 교직원 회의";
     const agenda = localStorage.getItem('meetingAgenda') || "1. 개회 선언\n2. 학교장 인사말씀\n3. 안건 토의";
 
@@ -92,7 +86,6 @@ function loadDashboardData() {
         }
     });
 
-    // 반응형 QR 로드
     let hasAnyQr = false;
     for (let i = 1; i <= 3; i++) {
         const qrTitle = localStorage.getItem(`meetingQrTitle${i}`);
@@ -109,7 +102,6 @@ function loadDashboardData() {
         }
     }
 
-    // 초기 기본값
     if (!hasAnyQr) {
         document.getElementById('qr-box-1').style.display = 'flex';
         document.getElementById('qr-label-1').textContent = "연수 등록부";
@@ -117,7 +109,6 @@ function loadDashboardData() {
     }
 }
 
-// 5. 관리자 모달 제어 (실시간 폰트 프리뷰 포함)
 function setupAdminEvents() {
     const adminModal = document.getElementById('admin-modal');
     const openAdminBtn = document.getElementById('open-admin');
@@ -128,12 +119,10 @@ function setupAdminEvents() {
     const sliderAgenda = document.getElementById('admin-font-agenda');
     const sliderQR = document.getElementById('admin-font-qr');
 
-    // 슬라이더 조절 시 실시간 프리뷰
     sliderTitle.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-title', `${e.target.value}px`));
     sliderAgenda.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-agenda', `${e.target.value}px`));
     sliderQR.addEventListener('input', (e) => document.documentElement.style.setProperty('--font-size-qr', `${e.target.value}px`));
 
-    // 모달 열기 및 기존 데이터 바인딩
     if (openAdminBtn) {
         openAdminBtn.addEventListener('click', () => {
             sliderTitle.value = localStorage.getItem('meetingFontTitle') || '50';
@@ -151,7 +140,6 @@ function setupAdminEvents() {
         });
     }
 
-    // 모달 닫기 (실시간 프리뷰 원상복구)
     if (closeAdminBtn) {
         closeAdminBtn.addEventListener('click', () => {
             document.documentElement.style.setProperty('--font-size-title', `${localStorage.getItem('meetingFontTitle') || '50'}px`);
@@ -176,7 +164,6 @@ function setupAdminEvents() {
         });
     }
 
-    // 최종 저장 프로세스
     if (saveAdminBtn) {
         saveAdminBtn.addEventListener('click', async () => {
             localStorage.setItem('meetingFontTitle', sliderTitle.value);
