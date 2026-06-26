@@ -3,18 +3,13 @@
     --color-patch-cream: #FDF8E1; --color-patch-mustard: #E3A857;
     --font-title: 50px; --font-agenda: 24px;
 }
-body { background: var(--color-bg); font-family: 'NanumSquareRound', sans-serif; overflow: hidden; }
+body { background-color: var(--color-bg); font-family: 'NanumSquareRound', sans-serif; overflow: hidden; }
 .dashboard { display: flex; height: 100vh; padding: 40px; gap: 20px; }
 .side-col { width: 220px; display: flex; flex-direction: column; gap: 20px; }
 .main-col { flex: 1; display: flex; flex-direction: column; gap: 20px; }
 .patch { border: 3px dashed var(--color-stitch); border-radius: 20px; padding: 20px; background: var(--color-patch-cream); }
-.patch-title { height: 120px; background: var(--color-patch-mustard); display: flex; justify-content: center; align-items: center; }
+.patch-title { height: 120px; background: var(--color-patch-mustard); display: flex; align-items: center; justify-content: center; }
 #meeting-title { font-size: var(--font-title); }
-.analog-clock { width: 160px; height: 160px; border-radius: 50%; border: 2px solid #555; position: relative; margin: 0 auto; }
-.number { position: absolute; font-weight: 800; }
-.n12 { top: 5px; left: 50%; transform: translateX(-50%); }
-.n3 { right: 5px; top: 50%; transform: translateY(-50%); }
-.n6 { bottom: 5px; left: 50%; transform: translateX(-50%); }
-.n9 { left: 5px; top: 50%; transform: translateY(-50%); }
+.analog-clock { width: 160px; height: 160px; border-radius: 50%; border: 2px solid #555; margin: 0 auto; position: relative; }
 .cute-frame img { width: 380px; height: 380px; object-fit: cover; border: 5px solid #FFF; }
 .icon-btn { padding: 15px; border-radius: 15px; background: #FFF9C4; border: 2px solid var(--color-stitch); cursor: pointer; }
