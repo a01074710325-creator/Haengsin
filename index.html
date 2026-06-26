@@ -25,13 +25,23 @@
         </div>
 
         <div class="patch patch-title">
-            <h1 id="meeting-title">2026 교직원 회의</h1>
+            <h1 id="meeting-title">교직원 회의</h1>
         </div>
 
         <div class="patch patch-agenda">
-            <h2># 회의 순서</h2>
-            <ul id="agenda-list" class="agenda-list">
-                </ul>
+            <div class="agenda-content">
+                <h2># 회의 순서</h2>
+                <ul id="agenda-list" class="agenda-list">
+                    </ul>
+            </div>
+            
+            <div class="photo-content">
+                <div class="cute-frame" id="cute-frame" style="display:none;">
+                    <div class="frame-tape"></div>
+                    <img id="dashboard-photo" src="" alt="추억 사진">
+                    <p class="frame-caption">Happy Moments ✨</p>
+                </div>
+            </div>
         </div>
 
         <div class="patch-qr-column">
@@ -60,7 +70,7 @@
         </div>
 
         <div class="patch-action patch-music">
-            <div id="youtube-player" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
+            <div id="youtube-player" style="position: absolute; left: -9999px; width: 10px; height: 10px;"></div>
             <button id="music-toggle" class="icon-btn" title="음악 재생/정지">
                 <svg id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="2" y="2" width="20" height="20" rx="6"/>
@@ -80,6 +90,7 @@
         <div class="modal-card">
             <h2>⚙️ 회의 환경 설정</h2>
             <div class="modal-scroll-area">
+                
                 <div class="font-control-box">
                     <h4>🔠 글자 크기 개별 조절</h4>
                     <div class="font-slider">
@@ -104,6 +115,11 @@
                 <div class="input-group">
                     <label>회의 순서 (줄바꿈으로 구분)</label>
                     <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
+                </div>
+
+                <div class="input-group" style="background: #FFF9C4; padding: 15px; border-radius: 8px; border: 1px dashed #E3A857;">
+                    <label>📸 사진 프레임 업로드 (가로/세로 비율이 비슷한 사진 권장)</label>
+                    <input type="file" id="admin-photo-upload" accept="image/*">
                 </div>
 
                 <div class="qr-setting-box">
