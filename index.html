@@ -2,155 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교직원 회의 대시보드</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard patchwork-bg">
-        
-        <div class="patch patch-clock">
-            <div class="analog-clock">
-                <div class="hand hour" id="hour-hand"></div>
-                <div class="hand minute" id="min-hand"></div>
-                <div class="hand second" id="sec-hand"></div>
-                <div class="center-dot"></div>
-                <div class="number n12">12</div>
-                <div class="number n3">3</div>
-                <div class="number n6">6</div>
-                <div class="number n9">9</div>
+        <div class="stitch-border"></div>
+        <div class="side-col left">
+            <div class="patch patch-clock">
+                <div class="analog-clock">
+                    <div class="hand hour" id="hour-hand"></div>
+                    <div class="hand minute" id="min-hand"></div>
+                    <div class="hand second" id="sec-hand"></div>
+                    <div class="center-dot"></div>
+                    <div class="number n12">12</div><div class="number n3">3</div>
+                    <div class="number n6">6</div><div class="number n9">9</div>
+                </div>
             </div>
-            <div class="patch-label">현재 시간</div>
+            <button id="open-admin" class="icon-btn">⚙️ 설정</button>
         </div>
-
-        <div class="patch patch-title">
-            <h1 id="meeting-title">교직원 회의</h1>
-        </div>
-
-        <div class="patch patch-agenda">
-            <div class="agenda-content">
-                <h2># 회의 순서</h2>
-                <ul id="agenda-list" class="agenda-list">
-                    </ul>
-            </div>
-            
-            <div class="photo-content">
-                <div class="cute-frame" id="cute-frame" style="display:none;">
-                    <div class="frame-tape"></div>
-                    <img id="dashboard-photo" src="" alt="추억 사진">
-                    <p class="frame-caption">Happy Moments ✨</p>
+        <div class="main-col">
+            <div class="patch patch-title"><h1 id="meeting-title">2026 교직원 회의</h1></div>
+            <div class="patch patch-agenda">
+                <div class="agenda-content">
+                    <h2># 회의 순서</h2>
+                    <ul id="agenda-list" class="agenda-list"></ul>
+                </div>
+                <div class="photo-content">
+                    <div class="cute-frame" id="cute-frame" style="display:none;">
+                        <div class="frame-tape"></div>
+                        <img id="dashboard-photo" src="" alt="사진">
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="patch-qr-column">
-            <div class="patch patch-qr" id="qr-box-1" style="display:none;">
-                <p class="qr-label" id="qr-label-1">QR 1</p>
-                <div class="qr-image-wrap"><img id="qr-image-1" src="" alt="QR 1"></div>
-            </div>
-            <div class="patch patch-qr" id="qr-box-2" style="display:none;">
-                <p class="qr-label" id="qr-label-2">QR 2</p>
-                <div class="qr-image-wrap"><img id="qr-image-2" src="" alt="QR 2"></div>
-            </div>
-            <div class="patch patch-qr" id="qr-box-3" style="display:none;">
-                <p class="qr-label" id="qr-label-3">QR 3</p>
-                <div class="qr-image-wrap"><img id="qr-image-3" src="" alt="QR 3"></div>
-            </div>
-        </div>
-
-        <div class="patch-action patch-settings">
-            <button id="open-admin" class="icon-btn" title="설정">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-            </button>
-            <div class="patch-label-small">설정</div>
-        </div>
-
-        <div class="patch-action patch-music">
-            <div id="youtube-player" style="position: absolute; left: -9999px; width: 10px; height: 10px;"></div>
-            <button id="music-toggle" class="icon-btn" title="음악 재생/정지">
-                <svg id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="2" width="20" height="20" rx="6"/>
-                    <polygon points="10,8 16,12 10,16"/>
-                </svg>
-                <svg id="icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none;">
-                    <rect x="2" y="2" width="20" height="20" rx="6"/>
-                    <line x1="9" y1="8" x2="9" y2="16"/>
-                    <line x1="15" y1="8" x2="15" y2="16"/>
-                </svg>
-            </button>
-            <div class="patch-label-small" id="music-text">음악 켜기</div>
+        <div class="side-col right">
+            <div id="qr-wrapper" class="qr-col"></div>
+            <button id="music-toggle" class="icon-btn">🎵 음악 재생</button>
+            <div id="youtube-player" style="position: absolute; left: -9999px;"></div>
         </div>
     </div>
-
-    <div id="admin-modal" class="modal">
-        <div class="modal-card">
-            <h2>⚙️ 회의 환경 설정</h2>
-            <div class="modal-scroll-area">
-                
-                <div class="font-control-box">
-                    <h4>🔠 글자 크기 개별 조절</h4>
-                    <div class="font-slider">
-                        <label>회의 제목</label>
-                        <input type="range" id="admin-font-title" min="30" max="80" value="50">
-                    </div>
-                    <div class="font-slider">
-                        <label>회의 순서</label>
-                        <input type="range" id="admin-font-agenda" min="16" max="40" value="24">
-                    </div>
-                    <div class="font-slider">
-                        <label>QR 제목</label>
-                        <input type="range" id="admin-font-qr" min="12" max="28" value="16">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>회의 제목</label>
-                    <input type="text" id="admin-title-input" placeholder="회의 제목을 입력하세요">
-                </div>
-                
-                <div class="input-group">
-                    <label>회의 순서 (줄바꿈으로 구분)</label>
-                    <textarea id="admin-agenda-input" rows="4" placeholder="1. 개회&#10;2. 안건 토의"></textarea>
-                </div>
-
-                <div class="input-group" style="background: #FFF9C4; padding: 15px; border-radius: 8px; border: 1px dashed #E3A857;">
-                    <label>📸 사진 프레임 업로드 (가로/세로 비율이 비슷한 사진 권장)</label>
-                    <input type="file" id="admin-photo-upload" accept="image/*">
-                </div>
-
-                <div class="qr-setting-box">
-                    <h4>📌 첫 번째 QR</h4>
-                    <input type="text" id="admin-qr-title-1" placeholder="제목 (예: 연수 등록부)">
-                    <input type="file" id="admin-qr-upload-1" accept="image/*">
-                </div>
-                <div class="qr-setting-box">
-                    <h4>📌 두 번째 QR</h4>
-                    <input type="text" id="admin-qr-title-2" placeholder="제목 (예: 만족도 조사)">
-                    <input type="file" id="admin-qr-upload-2" accept="image/*">
-                </div>
-                <div class="qr-setting-box">
-                    <h4>📌 세 번째 QR</h4>
-                    <input type="text" id="admin-qr-title-3" placeholder="비워두면 표시되지 않습니다">
-                    <input type="file" id="admin-qr-upload-3" accept="image/*">
-                </div>
-                
-                <div class="input-group" style="margin-top: 15px;">
-                    <label>유튜브 배경음악 링크</label>
-                    <input type="text" id="admin-yt-input" placeholder="유튜브 영상 주소(URL) 전체 입력">
-                </div>
-            </div>
-            
-            <div class="modal-actions">
-                <button id="close-admin" class="btn-secondary">닫기</button>
-                <button id="save-admin" class="btn-primary">저장하기</button>
-            </div>
-        </div>
-    </div>
-
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js"></script>
 </body>
