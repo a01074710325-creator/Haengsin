@@ -30,7 +30,6 @@ let player;
 function onYouTubeIframeAPIReady() {
     const savedYtId = localStorage.getItem('meetingYtId') || 'jfKfPfyJRdk';
     player = new YT.Player('youtube-player', {
-        // 크기를 부여하되 CSS에서 left: -9999px로 밀어내어 브라우저 재생 차단을 우회함
         height: '200', width: '200', 
         videoId: savedYtId,
         playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': savedYtId, 'playsinline': 1 },
@@ -87,7 +86,6 @@ function loadDashboardData() {
         }
     });
 
-    // 사진 프레임 렌더링 로직
     const photoData = localStorage.getItem('meetingPhotoFrame');
     const frameContainer = document.getElementById('cute-frame');
     if (photoData) {
@@ -192,13 +190,11 @@ function setupAdminEvents() {
 
             const uploadPromises = [];
             
-            // 사진 프레임 데이터 배열에 추가
             const photoFileInput = document.getElementById('admin-photo-upload');
             if (photoFileInput.files[0]) {
                 uploadPromises.push(saveFileToStorage(photoFileInput.files[0], 'meetingPhotoFrame'));
             }
 
-            // QR 데이터 배열에 추가
             for (let i = 1; i <= 3; i++) {
                 localStorage.setItem(`meetingQrTitle${i}`, document.getElementById(`admin-qr-title-${i}`).value);
                 const fileInput = document.getElementById(`admin-qr-upload-${i}`);
